@@ -29,7 +29,7 @@ function Dashboard() {
   const min = Math.min(...weeklyProgress.map((p) => p.weight));
   const proteinPct = (user.currentProtein / user.proteinTarget) * 100;
   const weightProgress = Math.min(100, Math.max(0, ((80 - user.weight) / (80 - user.goalWeight)) * 100));
-  const totalMins = today.exercises.reduce((a, e) => a + (e.minutes ?? 10), 0);
+  const totalMins = today.exercises.length * 10;
 
   return (
     <AppShell title={`Hi ${user.name.split(" ")[0]} 👋`}>
