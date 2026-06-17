@@ -50,48 +50,50 @@ function NavLinks({ onClick }: { onClick?: () => void }) {
 export function AppShell({ children, title }: { children: ReactNode; title?: string }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="min-h-screen flex w-full bg-background">
-      {/* Desktop sidebar */}
-      <aside className="hidden md:flex w-64 shrink-0 flex-col border-r border-sidebar-border bg-sidebar p-4">
-        <div className="mb-8 px-2"><Logo /></div>
-        <NavLinks />
-        <div className="mt-auto pt-4">
-          <Link to="/login" className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-muted-foreground hover:bg-sidebar-accent">
-            <LogOut className="h-4 w-4" /> Log out
-          </Link>
-        </div>
-      </aside>
-
-      {/* Mobile top bar */}
-      <div className="md:hidden fixed top-0 inset-x-0 z-30 flex items-center justify-between border-b border-border bg-background/90 backdrop-blur px-4 h-14">
-        <Logo />
-        <button onClick={() => setOpen(true)} className="p-2 rounded-lg hover:bg-accent" aria-label="Open menu">
-          <Menu className="h-5 w-5" />
-        </button>
-      </div>
-
-      {/* Mobile drawer */}
-      {open && (
-        <div className="md:hidden fixed inset-0 z-40">
-          <div className="absolute inset-0 bg-black/40" onClick={() => setOpen(false)} />
-          <div className="absolute left-0 top-0 bottom-0 w-72 bg-sidebar p-4 flex flex-col">
-            <div className="flex items-center justify-between mb-6">
-              <Logo />
-              <button onClick={() => setOpen(false)} className="p-2 rounded-lg hover:bg-accent" aria-label="Close menu">
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-            <NavLinks onClick={() => setOpen(false)} />
+    <div className="dark">
+      <div className="min-h-screen flex w-full bg-background text-foreground">
+        {/* Desktop sidebar */}
+        <aside className="hidden md:flex w-64 shrink-0 flex-col border-r border-sidebar-border bg-sidebar p-4">
+          <div className="mb-8 px-2"><Logo /></div>
+          <NavLinks />
+          <div className="mt-auto pt-4 border-t border-sidebar-border">
+            <Link to="/login" className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-muted-foreground hover:bg-sidebar-accent hover:text-foreground transition-colors">
+              <LogOut className="h-4 w-4" /> Log out
+            </Link>
           </div>
-        </div>
-      )}
+        </aside>
 
-      <main className="flex-1 min-w-0 pt-14 md:pt-0">
-        <div className="px-4 sm:px-6 md:px-10 py-6 md:py-10 max-w-6xl mx-auto">
-          {title && <h1 className="text-2xl md:text-3xl font-bold tracking-tight mb-6">{title}</h1>}
-          {children}
+        {/* Mobile top bar */}
+        <div className="md:hidden fixed top-0 inset-x-0 z-30 flex items-center justify-between border-b border-border bg-background/80 backdrop-blur-xl px-4 h-14">
+          <Logo />
+          <button onClick={() => setOpen(true)} className="p-2 rounded-lg hover:bg-accent" aria-label="Open menu">
+            <Menu className="h-5 w-5" />
+          </button>
         </div>
-      </main>
+
+        {/* Mobile drawer */}
+        {open && (
+          <div className="md:hidden fixed inset-0 z-40">
+            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setOpen(false)} />
+            <div className="absolute left-0 top-0 bottom-0 w-72 bg-sidebar p-4 flex flex-col border-r border-sidebar-border">
+              <div className="flex items-center justify-between mb-6">
+                <Logo />
+                <button onClick={() => setOpen(false)} className="p-2 rounded-lg hover:bg-accent" aria-label="Close menu">
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+              <NavLinks onClick={() => setOpen(false)} />
+            </div>
+          </div>
+        )}
+
+        <main className="flex-1 min-w-0 pt-14 md:pt-0">
+          <div className="px-4 sm:px-6 md:px-10 py-6 md:py-10 max-w-6xl mx-auto">
+            {title && <h1 className="text-2xl md:text-4xl font-extrabold tracking-tight mb-2">{title}</h1>}
+            {children}
+          </div>
+        </main>
+      </div>
     </div>
   );
 }
