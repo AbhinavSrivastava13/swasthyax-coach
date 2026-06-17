@@ -169,8 +169,10 @@ function Landing() {
         </div>
       </section>
 
-      <footer className="px-4 sm:px-6 py-10 border-t border-border text-center text-sm text-muted-foreground">
+      <footer className="px-4 sm:px-6 py-10 border-t border-border text-center text-sm text-muted-foreground whitespace-pre-line">
         © {new Date().getFullYear()} SwasthyaX. Built for India.
+        {"\n"}Founder - Abhinav Srivastava
+        {"\n"}Email - AbhinavSrivastava912@gmail.com
       </footer>
     </div>
   );
