@@ -50,7 +50,7 @@ function Landing() {
           "radial-gradient(1200px 600px at 50% -200px, #DBEAFE 0%, rgba(219,234,254,0) 60%), #FFFFFF",
         color: "#0F172A",
         fontFamily:
-          "'DM Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
+          "'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
       }}
     >
       {/* Nav */}
@@ -69,7 +69,7 @@ function Landing() {
             >
               <Activity className="h-5 w-5" />
             </div>
-            <span style={{ fontFamily: "'Space Grotesk', sans-serif", letterSpacing: "-0.01em" }}>
+            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", letterSpacing: "-0.01em" }}>
               SwasthyaX
             </span>
           </Link>
@@ -82,7 +82,7 @@ function Landing() {
               Log in
             </Link>
             <Link
-              to="/signup"
+              to="/onboarding"
               className="text-sm font-semibold px-4 py-2 rounded-lg text-white shadow-sm transition-transform hover:scale-[1.02]"
               style={{ background: `linear-gradient(135deg, ${BLUE}, ${BLUE_DARK})` }}
             >
@@ -102,10 +102,10 @@ function Landing() {
             <Sparkles className="h-3.5 w-3.5" /> Built for Indian working professionals
           </div>
           <h1
-            className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-[1.05]"
+            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold tracking-tight leading-[1.02]"
             style={{
-              fontFamily: "'Space Grotesk', sans-serif",
-              letterSpacing: "-0.025em",
+              fontFamily: "'Plus Jakarta Sans', sans-serif",
+              letterSpacing: "-0.035em",
               color: "#0F172A",
             }}
           >
@@ -122,15 +122,15 @@ function Landing() {
             </span>
           </h1>
           <p
-            className="mt-6 text-base md:text-lg max-w-2xl mx-auto leading-relaxed"
+            className="mt-7 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed"
             style={{ color: "#475569" }}
           >
-            Get personalized Indian diet plans, home workouts, and daily fitness guidance designed
+            Personalised Indian diet plans, home workouts, and daily fitness guidance — designed
             around your schedule, food preferences, and goals.
           </p>
           <div className="mt-9 flex flex-col sm:flex-row gap-3 justify-center">
             <Link
-              to="/signup"
+              to="/onboarding"
               className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl text-white font-semibold transition-transform hover:scale-[1.02]"
               style={{
                 background: `linear-gradient(135deg, ${BLUE}, ${BLUE_DARK})`,
@@ -208,7 +208,7 @@ function Landing() {
             </div>
             <h2
               className="mt-2 text-3xl md:text-4xl font-bold tracking-tight"
-              style={{ fontFamily: "'Space Grotesk', sans-serif", letterSpacing: "-0.02em" }}
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", letterSpacing: "-0.02em" }}
             >
               Built for how India actually lives
             </h2>
@@ -256,7 +256,7 @@ function Landing() {
             </div>
             <h2
               className="mt-2 text-3xl md:text-4xl font-bold tracking-tight"
-              style={{ fontFamily: "'Space Grotesk', sans-serif", letterSpacing: "-0.02em" }}
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", letterSpacing: "-0.02em" }}
             >
               Everything you need to stay consistent
             </h2>
@@ -306,7 +306,7 @@ function Landing() {
             </div>
             <h2
               className="mt-2 text-3xl md:text-4xl font-bold tracking-tight"
-              style={{ fontFamily: "'Space Grotesk', sans-serif", letterSpacing: "-0.02em" }}
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", letterSpacing: "-0.02em" }}
             >
               Get started in 3 simple steps
             </h2>
@@ -369,7 +369,7 @@ function Landing() {
               </div>
               <h2
                 className="mt-4 text-3xl md:text-4xl font-bold tracking-tight"
-                style={{ fontFamily: "'Space Grotesk', sans-serif", letterSpacing: "-0.02em", color: "#0F172A" }}
+                style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", letterSpacing: "-0.02em", color: "#0F172A" }}
               >
                 Join the First 100 Beta Users
               </h2>
@@ -378,7 +378,7 @@ function Landing() {
                 with your feedback, and lock in lifetime perks.
               </p>
               <Link
-                to="/signup"
+                to="/onboarding"
                 className="mt-6 inline-flex items-center gap-2 px-6 py-3 rounded-xl text-white font-semibold transition-transform hover:scale-[1.02]"
                 style={{
                   background: `linear-gradient(135deg, ${GREEN}, #059669)`,
@@ -438,7 +438,7 @@ function Landing() {
           />
           <h2
             className="relative text-3xl md:text-5xl font-bold tracking-tight"
-            style={{ fontFamily: "'Space Grotesk', sans-serif", letterSpacing: "-0.025em" }}
+            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", letterSpacing: "-0.025em" }}
           >
             Start Your Fitness Journey Today
           </h2>
@@ -446,7 +446,7 @@ function Landing() {
             No gym required. No expensive coaches. Just a fitness system built for Indians.
           </p>
           <Link
-            to="/signup"
+            to="/onboarding"
             className="relative mt-8 inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold transition-transform hover:scale-[1.03]"
             style={{
               background: "#FFFFFF",
@@ -474,7 +474,7 @@ function Landing() {
                 >
                   <Activity className="h-5 w-5" />
                 </div>
-                <span style={{ fontFamily: "'Space Grotesk', sans-serif", color: "#0F172A" }}>
+                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: "#0F172A" }}>
                   SwasthyaX
                 </span>
               </div>
