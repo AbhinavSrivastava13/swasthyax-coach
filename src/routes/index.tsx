@@ -102,10 +102,10 @@ function Landing() {
             <Sparkles className="h-3.5 w-3.5" /> Built for Indian working professionals
           </div>
           <h1
-            className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-[1.05]"
+            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold tracking-tight leading-[1.02]"
             style={{
               fontFamily: "'Plus Jakarta Sans', sans-serif",
-              letterSpacing: "-0.025em",
+              letterSpacing: "-0.035em",
               color: "#0F172A",
             }}
           >
@@ -122,10 +122,10 @@ function Landing() {
             </span>
           </h1>
           <p
-            className="mt-6 text-base md:text-lg max-w-2xl mx-auto leading-relaxed"
+            className="mt-7 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed"
             style={{ color: "#475569" }}
           >
-            Get personalized Indian diet plans, home workouts, and daily fitness guidance designed
+            Personalised Indian diet plans, home workouts, and daily fitness guidance — designed
             around your schedule, food preferences, and goals.
           </p>
           <div className="mt-9 flex flex-col sm:flex-row gap-3 justify-center">
