@@ -82,7 +82,7 @@ function Landing() {
               Log in
             </Link>
             <Link
-              to="/signup"
+              to="/onboarding"
               className="text-sm font-semibold px-4 py-2 rounded-lg text-white shadow-sm transition-transform hover:scale-[1.02]"
               style={{ background: `linear-gradient(135deg, ${BLUE}, ${BLUE_DARK})` }}
             >
@@ -130,7 +130,7 @@ function Landing() {
           </p>
           <div className="mt-9 flex flex-col sm:flex-row gap-3 justify-center">
             <Link
-              to="/signup"
+              to="/onboarding"
               className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl text-white font-semibold transition-transform hover:scale-[1.02]"
               style={{
                 background: `linear-gradient(135deg, ${BLUE}, ${BLUE_DARK})`,
@@ -378,7 +378,7 @@ function Landing() {
                 with your feedback, and lock in lifetime perks.
               </p>
               <Link
-                to="/signup"
+                to="/onboarding"
                 className="mt-6 inline-flex items-center gap-2 px-6 py-3 rounded-xl text-white font-semibold transition-transform hover:scale-[1.02]"
                 style={{
                   background: `linear-gradient(135deg, ${GREEN}, #059669)`,
@@ -446,7 +446,7 @@ function Landing() {
             No gym required. No expensive coaches. Just a fitness system built for Indians.
           </p>
           <Link
-            to="/signup"
+            to="/onboarding"
             className="relative mt-8 inline-flex items-center gap-2 px-8 py-4 rounded-xl font-semibold transition-transform hover:scale-[1.03]"
             style={{
               background: "#FFFFFF",
