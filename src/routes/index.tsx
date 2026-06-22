@@ -50,7 +50,7 @@ function Landing() {
           "radial-gradient(1200px 600px at 50% -200px, #DBEAFE 0%, rgba(219,234,254,0) 60%), #FFFFFF",
         color: "#0F172A",
         fontFamily:
-          "'DM Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
+          "'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
       }}
     >
       {/* Nav */}
@@ -69,7 +69,7 @@ function Landing() {
             >
               <Activity className="h-5 w-5" />
             </div>
-            <span style={{ fontFamily: "'Space Grotesk', sans-serif", letterSpacing: "-0.01em" }}>
+            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", letterSpacing: "-0.01em" }}>
               SwasthyaX
             </span>
           </Link>
@@ -104,7 +104,7 @@ function Landing() {
           <h1
             className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-[1.05]"
             style={{
-              fontFamily: "'Space Grotesk', sans-serif",
+              fontFamily: "'Plus Jakarta Sans', sans-serif",
               letterSpacing: "-0.025em",
               color: "#0F172A",
             }}
@@ -208,7 +208,7 @@ function Landing() {
             </div>
             <h2
               className="mt-2 text-3xl md:text-4xl font-bold tracking-tight"
-              style={{ fontFamily: "'Space Grotesk', sans-serif", letterSpacing: "-0.02em" }}
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", letterSpacing: "-0.02em" }}
             >
               Built for how India actually lives
             </h2>
@@ -256,7 +256,7 @@ function Landing() {
             </div>
             <h2
               className="mt-2 text-3xl md:text-4xl font-bold tracking-tight"
-              style={{ fontFamily: "'Space Grotesk', sans-serif", letterSpacing: "-0.02em" }}
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", letterSpacing: "-0.02em" }}
             >
               Everything you need to stay consistent
             </h2>
@@ -306,7 +306,7 @@ function Landing() {
             </div>
             <h2
               className="mt-2 text-3xl md:text-4xl font-bold tracking-tight"
-              style={{ fontFamily: "'Space Grotesk', sans-serif", letterSpacing: "-0.02em" }}
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", letterSpacing: "-0.02em" }}
             >
               Get started in 3 simple steps
             </h2>
@@ -369,7 +369,7 @@ function Landing() {
               </div>
               <h2
                 className="mt-4 text-3xl md:text-4xl font-bold tracking-tight"
-                style={{ fontFamily: "'Space Grotesk', sans-serif", letterSpacing: "-0.02em", color: "#0F172A" }}
+                style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", letterSpacing: "-0.02em", color: "#0F172A" }}
               >
                 Join the First 100 Beta Users
               </h2>
@@ -438,7 +438,7 @@ function Landing() {
           />
           <h2
             className="relative text-3xl md:text-5xl font-bold tracking-tight"
-            style={{ fontFamily: "'Space Grotesk', sans-serif", letterSpacing: "-0.025em" }}
+            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", letterSpacing: "-0.025em" }}
           >
             Start Your Fitness Journey Today
           </h2>
@@ -474,7 +474,7 @@ function Landing() {
                 >
                   <Activity className="h-5 w-5" />
                 </div>
-                <span style={{ fontFamily: "'Space Grotesk', sans-serif", color: "#0F172A" }}>
+                <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", color: "#0F172A" }}>
                   SwasthyaX
                 </span>
               </div>
