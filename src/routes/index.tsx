@@ -686,7 +686,7 @@ function PreviewStat({
   unit,
   foot,
 }: {
-  icon: React.ComponentType<{ className?: string }>;
+  icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
   tint: string;
   color: string;
   label: string;
