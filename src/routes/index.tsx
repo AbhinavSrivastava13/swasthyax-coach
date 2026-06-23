@@ -109,7 +109,7 @@ function Landing() {
             className="text-6xl sm:text-7xl md:text-8xl lg:text-[8.5rem] font-extrabold tracking-tight leading-[0.98]"
             style={{ fontFamily: fontHead, letterSpacing: "-0.04em", color: INK }}
           >
-            Get Fit on{" "}
+            Fitness Built for{" "}
             <span
               style={{
                 background: `linear-gradient(135deg, ${BLUE}, #6366F1)`,
@@ -118,18 +118,14 @@ function Landing() {
                 backgroundClip: "text",
               }}
             >
-              Indian Food
-            </span>
-            <br className="hidden sm:block" />
-            <span className="text-5xl sm:text-6xl md:text-7xl lg:text-[6.5rem]">
-              Without the Gym.
+              Indian Professionals
             </span>
           </h1>
           <p
             className="mt-6 text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed font-medium"
             style={{ color: MUTED }}
           >
-            Personalized Indian meal plans and 20-minute home workouts — built around your schedule,
+            Personalized Indian meal plans and 20-minute home workouts : Built around your schedule,
             your kitchen, and your goals.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
