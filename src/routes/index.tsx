@@ -604,10 +604,15 @@ function Landing() {
             </div>
             <div>
               <div className="text-xs font-bold uppercase tracking-wider" style={{ color: INK }}>
-                Company
+                Contact
               </div>
               <ul className="mt-4 space-y-2 text-sm font-medium" style={{ color: SUBTLE }}>
-                <li>support@swasthyax.app</li>
+                <li>Founded by Abhinav Srivastava</li>
+                <li>
+                  <a href="mailto:AbhinavSrivastava912@gmail.com" className="hover:text-slate-900 transition-colors">
+                    AbhinavSrivastava912@gmail.com
+                  </a>
+                </li>
                 <li>Made in India 🇮🇳</li>
               </ul>
             </div>
