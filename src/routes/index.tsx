@@ -97,17 +97,17 @@ function Landing() {
       </header>
 
       {/* Hero */}
-      <section className="px-4 sm:px-6 pt-16 pb-12 md:pt-28 md:pb-20">
-        <div className="max-w-5xl mx-auto text-center">
+      <section className="px-4 sm:px-6 pt-12 pb-8 md:pt-16 md:pb-12">
+        <div className="max-w-4xl mx-auto text-center">
           <div
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold mb-8"
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold mb-6"
             style={{ background: "#EFF6FF", color: BLUE_DARK, border: "1px solid #DBEAFE" }}
           >
             <Sparkles className="h-3.5 w-3.5" /> Built for Indian working professionals
           </div>
           <h1
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-[9rem] font-extrabold tracking-tight leading-[0.92]"
-            style={{ fontFamily: fontHead, letterSpacing: "-0.04em", color: INK }}
+            className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[0.95]"
+            style={{ fontFamily: fontHead, letterSpacing: "-0.03em", color: INK }}
           >
             Fitness Built for{" "}
             <span
@@ -122,13 +122,13 @@ function Landing() {
             </span>
           </h1>
           <p
-            className="mt-8 md:mt-10 text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed font-medium"
+            className="mt-6 md:mt-8 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed font-medium"
             style={{ color: MUTED }}
           >
             Personalized Indian meal plans, 20-minute home workouts, and sustainable fitness
             routines designed around your busy schedule.
           </p>
-          <div className="mt-10 md:mt-12 flex flex-col sm:flex-row gap-3 justify-center">
+          <div className="mt-8 md:mt-10 flex flex-col sm:flex-row gap-3 justify-center">
             <Link
               to="/onboarding"
               className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-white text-base font-bold transition-transform hover:scale-[1.02]"
@@ -535,9 +535,9 @@ function Landing() {
       </Section>
 
       {/* Final CTA */}
-      <section className="px-4 sm:px-6 py-14 md:py-20">
+      <section className="px-4 sm:px-6 py-10 md:py-14">
         <div
-          className="max-w-4xl mx-auto rounded-3xl p-10 md:p-16 text-center text-white relative overflow-hidden"
+          className="max-w-4xl mx-auto rounded-3xl p-8 md:p-12 text-center text-white relative overflow-hidden"
           style={{
             background: `linear-gradient(135deg, ${BLUE} 0%, #4F46E5 100%)`,
             boxShadow: "0 30px 60px -20px rgba(37,99,235,0.45)",
@@ -550,17 +550,17 @@ function Landing() {
             }}
           />
           <h2
-            className="relative text-4xl md:text-6xl font-extrabold tracking-tight"
+            className="relative text-3xl md:text-4xl font-extrabold tracking-tight"
             style={{ fontFamily: fontHead, letterSpacing: "-0.03em" }}
           >
             Start Your Fitness Journey Today
           </h2>
-          <p className="relative mt-4 text-lg md:text-xl opacity-95 max-w-2xl mx-auto leading-relaxed">
+          <p className="relative mt-3 text-base md:text-lg opacity-95 max-w-2xl mx-auto leading-relaxed">
             No gym required. No expensive coaches. Just a fitness system built for Indian professionals.
           </p>
           <Link
             to="/onboarding"
-            className="relative mt-8 inline-flex items-center gap-2 px-8 py-4 rounded-xl font-bold text-base transition-transform hover:scale-[1.03]"
+            className="relative mt-6 inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-base transition-transform hover:scale-[1.03]"
             style={{
               background: "#FFFFFF",
               color: BLUE_DARK,
@@ -645,7 +645,7 @@ function Section({
   bg?: string;
 }) {
   return (
-    <section className="px-4 sm:px-6 py-14 md:py-20" style={bg ? { background: bg } : undefined}>
+    <section className="px-4 sm:px-6 py-10 md:py-14" style={bg ? { background: bg } : undefined}>
       <div className="max-w-6xl mx-auto">
         {(eyebrow || title) && (
           <div className="text-center mb-10 md:mb-12">
@@ -659,7 +659,7 @@ function Section({
             )}
             {title && (
               <h2
-                className="mt-2 text-4xl md:text-5xl font-extrabold tracking-tight"
+                className="mt-2 text-3xl md:text-4xl font-extrabold tracking-tight"
                 style={{ fontFamily: fontHead, letterSpacing: "-0.025em", color: INK }}
               >
                 {title}
