@@ -2,7 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { useState, useMemo, useEffect } from "react";
 import { Beef } from "lucide-react";
-import { useProfile, useCheckIns, saveCheckIn } from "@/lib/profile";
+import { useAuth } from "@/lib/auth";
+import { useCheckIns } from "@/lib/data";
 import { proteinTarget, PROTEIN_FOODS } from "@/lib/generators";
 
 export const Route = createFileRoute("/protein-calculator")({
@@ -11,15 +12,33 @@ export const Route = createFileRoute("/protein-calculator")({
 });
 
 function ProteinGap() {
-  const { profile } = useProfile();
-  const checkIns = useCheckIns();
+  const { profile } = useAuth();
+  const { todayCheckIn, saveCheckIn } = useCheckIns();
   const todayStr = new Date().toISOString().slice(0, 10);
-  const todayCI = checkIns.find((c) => c.date === todayStr);
 
-  const target = useMemo(() => (profile ? proteinTarget(profile) : 0), [profile]);
-  const [current, setCurrent] = useState<number>(todayCI?.protein ?? 0);
+  const target = useMemo(() => {
+    if (!profile) return 0;
+    return proteinTarget({
+      name: profile.name,
+      age: profile.age,
+      gender: profile.gender,
+      height: profile.height,
+      weight: profile.weight,
+      goal: profile.goal,
+      goalWeight: profile.goal_weight,
+      timelineWeeks: profile.timeline_weeks,
+      workMode: profile.work_mode,
+      activity: profile.activity,
+      food: profile.food,
+      equipment: profile.equipment,
+      budget: profile.budget,
+      createdAt: profile.created_at,
+    });
+  }, [profile]);
 
-  useEffect(() => { setCurrent(todayCI?.protein ?? 0); }, [todayCI?.protein]);
+  const [current, setCurrent] = useState<number>(todayCheckIn?.protein ?? 0);
+
+  useEffect(() => { setCurrent(todayCheckIn?.protein ?? 0); }, [todayCheckIn?.protein]);
 
   if (!profile) return <AppShell title="Protein Gap">{null}</AppShell>;
 
@@ -27,13 +46,13 @@ function ProteinGap() {
   const pct = Math.min((current / Math.max(1, target)) * 100, 100);
   const foods = PROTEIN_FOODS[profile.food];
 
-  const save = (val: number) => {
+  const save = async (val: number) => {
     setCurrent(val);
-    saveCheckIn({
+    await saveCheckIn({
       date: todayStr,
-      weight: todayCI?.weight ?? profile.weight,
-      water: todayCI?.water ?? 0,
-      workoutDone: todayCI?.workoutDone ?? false,
+      weight: todayCheckIn?.weight ?? profile.weight,
+      water: todayCheckIn?.water ?? 0,
+      workout_done: todayCheckIn?.workout_done ?? false,
       protein: val,
     });
   };

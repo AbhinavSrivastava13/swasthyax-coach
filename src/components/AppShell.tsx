@@ -12,7 +12,7 @@ import {
   Bell,
 } from "lucide-react";
 import { useState, useEffect, type ReactNode } from "react";
-import { useProfile, clearProfile, type Profile } from "@/lib/profile";
+import { useAuth } from "@/lib/auth";
 
 const nav = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -67,17 +67,24 @@ function NavLinks({ onClick }: { onClick?: () => void }) {
   );
 }
 
-function UserCard({ profile }: { profile: Profile | null }) {
-  if (!profile) return null;
+function UserCard() {
+  const { profile, signOut, user } = useAuth();
+
+  if (!user) return null;
+
+  const name = profile?.name || user.email?.split("@")[0] || "User";
+  const goal = profile?.goal || "Fat Loss";
+  const weeks = profile?.timeline_weeks || 12;
+
   return (
     <div className="rounded-2xl border border-sidebar-border bg-sidebar-accent/40 p-3.5">
       <div className="flex items-center gap-3">
         <div className="grid h-10 w-10 place-items-center rounded-full bg-gradient-brand text-base font-bold text-brand-foreground shadow-glow">
-          {profile.name[0]?.toUpperCase() ?? "U"}
+          {name[0]?.toUpperCase() ?? "U"}
         </div>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-semibold">{profile.name}</p>
-          <p className="truncate text-[12px] text-muted-foreground">{profile.goal} · {profile.timelineWeeks}w plan</p>
+          <p className="truncate text-sm font-semibold">{name}</p>
+          <p className="truncate text-[12px] text-muted-foreground">{goal} · {weeks}w plan</p>
         </div>
       </div>
     </div>
@@ -98,14 +105,25 @@ export function AppShell({
   requireProfile?: boolean;
 }) {
   const [open, setOpen] = useState(false);
-  const { profile, ready } = useProfile();
+  const { user, profile, loading, signOut } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (requireProfile && ready && !profile) {
-      navigate({ to: "/onboarding" });
+    if (!loading && requireProfile) {
+      if (!user) {
+        navigate({ to: "/login" });
+      } else if (!profile) {
+        navigate({ to: "/onboarding" });
+      }
     }
-  }, [requireProfile, ready, profile, navigate]);
+  }, [requireProfile, loading, user, profile, navigate]);
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate({ to: "/" });
+  };
+
+  const isLoading = loading || (requireProfile && !profile);
 
   return (
     <div className="min-h-screen flex w-full bg-background">
@@ -114,12 +132,12 @@ export function AppShell({
         <div className="mb-10 px-1"><Logo /></div>
         <NavLinks />
         <div className="mt-auto space-y-3 pt-4">
-          <UserCard profile={profile} />
+          <UserCard />
           <button
-            onClick={() => { clearProfile(); navigate({ to: "/" }); }}
+            onClick={handleSignOut}
             className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground transition"
           >
-            <LogOut className="h-4 w-4" /> Reset & log out
+            <LogOut className="h-4 w-4" /> Sign out
           </button>
         </div>
       </aside>
@@ -144,7 +162,15 @@ export function AppShell({
               </button>
             </div>
             <NavLinks onClick={() => setOpen(false)} />
-            <div className="mt-auto pt-4"><UserCard profile={profile} /></div>
+            <div className="mt-auto pt-4">
+              <UserCard />
+              <button
+                onClick={handleSignOut}
+                className="mt-3 flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-muted-foreground hover:bg-sidebar-accent/60 hover:text-foreground transition"
+              >
+                <LogOut className="h-4 w-4" /> Sign out
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -155,9 +181,9 @@ export function AppShell({
           <button className="grid h-10 w-10 place-items-center rounded-xl border border-border hover:bg-accent transition" aria-label="Notifications">
             <Bell className="h-[18px] w-[18px]" />
           </button>
-          {profile && (
+          {user && (
             <div className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-brand text-base font-bold text-brand-foreground shadow-glow">
-              {profile.name[0]?.toUpperCase()}
+              {(profile?.name || user.email?.split("@")[0] || "U")[0]?.toUpperCase()}
             </div>
           )}
         </div>
@@ -178,7 +204,7 @@ export function AppShell({
               {actions && <div className="flex gap-2">{actions}</div>}
             </div>
           )}
-          {requireProfile && !profile ? (
+          {isLoading ? (
             <div className="text-muted-foreground text-base">Loading your plan…</div>
           ) : (
             children

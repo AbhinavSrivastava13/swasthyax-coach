@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo } from "react";
+import { useMemo, useEffect, useState } from "react";
 import { AppShell } from "@/components/AppShell";
-import { useProfile, useCheckIns } from "@/lib/profile";
+import { useAuth } from "@/lib/auth";
+import { useCheckIns, useAiRecommendations } from "@/lib/data";
 import { calorieTarget, proteinTarget, generateMealPlan, generateWorkoutPlan, bmi } from "@/lib/generators";
 import {
   Scale,
@@ -77,46 +78,72 @@ function Bar({ value, max }: { value: number; max: number }) {
 }
 
 function Dashboard() {
-  const { profile } = useProfile();
-  const checkIns = useCheckIns();
+  const { profile } = useAuth();
+  const { checkIns, todayCheckIn } = useCheckIns();
+  const { recommendation, loading: aiLoading, fetchRecommendation } = useAiRecommendations();
 
   const data = useMemo(() => {
     if (!profile) return null;
-    const cals = calorieTarget(profile);
-    const protein = proteinTarget(profile);
-    const meals = generateMealPlan(profile);
-    const workouts = generateWorkoutPlan(profile);
+
+    // Convert DB profile to generator format
+    const genProfile = {
+      name: profile.name,
+      age: profile.age,
+      gender: profile.gender,
+      height: profile.height,
+      weight: profile.weight,
+      goal: profile.goal,
+      goalWeight: profile.goal_weight,
+      timelineWeeks: profile.timeline_weeks,
+      workMode: profile.work_mode,
+      activity: profile.activity,
+      food: profile.food,
+      equipment: profile.equipment,
+      budget: profile.budget,
+      createdAt: profile.created_at,
+    };
+
+    const cals = calorieTarget(genProfile);
+    const protein = proteinTarget(genProfile);
+    const meals = generateMealPlan(genProfile);
+    const workouts = generateWorkoutPlan(genProfile);
     const todayIdx = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
 
     // last 7 check-ins (or seed with current weight)
     const recent = checkIns.slice(-7);
     const weightSeries = recent.length
-      ? recent.map((c) => ({ day: new Date(c.date).toLocaleDateString("en-US", { weekday: "short" }), weight: c.weight }))
+      ? recent.map((c) => ({ day: new Date(c.date).toLocaleDateString("en-US", { weekday: "short" }), weight: c.weight || profile.weight }))
       : [{ day: "Today", weight: profile.weight }];
 
-    const todayCI = checkIns.find((c) => c.date === new Date().toISOString().slice(0, 10));
-    const currentWeight = todayCI?.weight ?? recent[recent.length - 1]?.weight ?? profile.weight;
-    const waterToday = todayCI?.water ?? 0;
-    const proteinToday = todayCI?.protein ?? 0;
+    const currentWeight = todayCheckIn?.weight ?? recent[recent.length - 1]?.weight ?? profile.weight;
+    const waterToday = todayCheckIn?.water ?? 0;
+    const proteinToday = todayCheckIn?.protein ?? 0;
 
     const startWeight = recent[0]?.weight ?? profile.weight;
-    const delta = +(currentWeight - startWeight).toFixed(1);
+    const delta = +((currentWeight || profile.weight) - startWeight).toFixed(1);
 
     const goalProgressValue = profile.goal === "Fat Loss"
-      ? Math.max(0, profile.weight - currentWeight)
-      : Math.max(0, currentWeight - profile.weight);
-    const goalProgressMax = Math.abs(profile.weight - profile.goalWeight) || 1;
+      ? Math.max(0, profile.weight - (currentWeight || profile.weight))
+      : Math.max(0, (currentWeight || profile.weight) - profile.weight);
+    const goalProgressMax = Math.abs(profile.weight - profile.goal_weight) || 1;
 
     return {
-      cals, protein, meals, workouts,
+      cals, protein, meals, workouts, genProfile,
       today: workouts[todayIdx] ?? workouts[0],
       todayMeals: meals[todayIdx] ?? meals[0],
-      weightSeries, currentWeight, waterToday, proteinToday,
+      weightSeries, currentWeight: currentWeight || profile.weight, waterToday, proteinToday,
       startWeight, delta, goalProgressValue, goalProgressMax,
-      bmiVal: bmi({ weight: currentWeight, height: profile.height }),
+      bmiVal: bmi({ weight: currentWeight || profile.weight, height: profile.height }),
       streak: checkIns.length,
     };
-  }, [profile, checkIns]);
+  }, [profile, checkIns, todayCheckIn]);
+
+  // Fetch AI recommendation when data is ready
+  useEffect(() => {
+    if (profile && data && !recommendation && !aiLoading) {
+      fetchRecommendation(profile, checkIns);
+    }
+  }, [profile, data, recommendation, aiLoading, fetchRecommendation, checkIns]);
 
   if (!profile || !data) return <AppShell title="Loading">{null}</AppShell>;
 
@@ -130,7 +157,7 @@ function Dashboard() {
   return (
     <AppShell
       title={`Welcome, ${firstName}`}
-      subtitle={`Your personalised ${profile.goal.toLowerCase()} plan — ${profile.timelineWeeks} weeks · ${profile.food} · ${profile.equipment}.`}
+      subtitle={`Your personalised ${profile.goal.toLowerCase()} plan — ${profile.timeline_weeks} weeks · ${profile.food} · ${profile.equipment}.`}
       actions={
         <Link
           to="/check-in"
@@ -155,7 +182,7 @@ function Dashboard() {
                   {data.currentWeight}<span className="text-2xl text-muted-foreground ml-1">kg</span>
                 </div>
                 <p className="text-base text-muted-foreground mt-2">
-                  Target {profile.goalWeight} kg · {profile.timelineWeeks} weeks
+                  Target {profile.goal_weight} kg · {profile.timeline_weeks} weeks
                 </p>
                 <div className={`mt-4 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold ${
                   goingRightWay ? "bg-success/15 text-success" : "bg-warning/15 text-warning"
@@ -169,7 +196,7 @@ function Dashboard() {
               <Bar value={data.goalProgressValue} max={data.goalProgressMax} />
               <div className="mt-2.5 flex justify-between text-xs text-muted-foreground font-medium">
                 <span>Start · {data.startWeight} kg</span>
-                <span>Goal · {profile.goalWeight} kg</span>
+                <span>Goal · {profile.goal_weight} kg</span>
               </div>
             </div>
           </div>
@@ -360,9 +387,9 @@ function Dashboard() {
                 <Sparkles className="h-3.5 w-3.5" /> AI insight
               </div>
               <p className="mt-2.5 text-[15px] leading-snug">
-                {profile.goal === "Fat Loss"
+                {recommendation || (profile.goal === "Fat Loss"
                   ? <>Aim for {data.protein}g protein and stay within {data.cals.toLocaleString()} kcal. A 30-min brisk walk after dinner accelerates fat loss.</>
-                  : <>Hit {data.protein}g protein and a slight calorie surplus ({data.cals.toLocaleString()} kcal). Sleep 7-8 hours to maximise muscle recovery.</>}
+                  : <>Hit {data.protein}g protein and a slight calorie surplus ({data.cals.toLocaleString()} kcal). Sleep 7-8 hours to maximise muscle recovery.</>)}
               </p>
             </div>
             <Link to="/protein-calculator" className="shrink-0 rounded-xl border border-border bg-card px-4 py-2.5 text-sm font-semibold hover:border-brand transition">

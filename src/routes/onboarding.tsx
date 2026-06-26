@@ -1,7 +1,9 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ArrowLeft, ArrowRight, Activity as ActivityIcon } from "lucide-react";
-import { saveProfile, type Profile, type Gender, type Activity, type Food, type Goal, type Equipment } from "@/lib/profile";
+import { useAuth } from "@/lib/auth";
+import { useProfileData } from "@/lib/data";
+import { supabase } from "@/lib/supabase";
 
 export const Route = createFileRoute("/onboarding")({
   head: () => ({ meta: [{ title: "Set up your plan — SwasthyaX" }, { name: "description", content: "Tell us about yourself to personalize your plan." }] }),
@@ -9,6 +11,12 @@ export const Route = createFileRoute("/onboarding")({
 });
 
 const steps = ["Profile", "Lifestyle", "Goal"] as const;
+
+type Gender = "Male" | "Female" | "Other";
+type Activity = "Sedentary" | "Lightly Active" | "Active";
+type Food = "Vegetarian" | "Eggetarian" | "Non-Vegetarian";
+type Goal = "Fat Loss" | "Muscle Gain";
+type Equipment = "No equipment" | "Dumbbells";
 
 type Draft = {
   name: string;
@@ -44,35 +52,81 @@ const initialDraft: Draft = {
 
 function Onboarding() {
   const navigate = useNavigate();
+  const { user, profile, loading: authLoading } = useAuth();
+  const { createProfile, updateProfile } = useProfileData();
   const [step, setStep] = useState(0);
   const [draft, setDraft] = useState<Draft>(initialDraft);
+  const [saving, setSaving] = useState(false);
   const set = <K extends keyof Draft>(k: K, v: Draft[K]) => setDraft((d) => ({ ...d, [k]: v }));
+
+  useEffect(() => {
+    if (authLoading) return;
+    if (!user) {
+      navigate({ to: "/signup" });
+      return;
+    }
+    if (profile) {
+      setDraft({
+        name: profile.name,
+        age: profile.age,
+        gender: profile.gender,
+        height: profile.height,
+        weight: profile.weight,
+        workMode: profile.work_mode,
+        activity: profile.activity,
+        food: profile.food,
+        budget: profile.budget,
+        equipment: profile.equipment,
+        goal: profile.goal,
+        goalWeight: profile.goal_weight,
+        timelineWeeks: profile.timeline_weeks,
+      });
+    }
+  }, [user, profile, authLoading, navigate]);
 
   const canContinue =
     (step === 0 && draft.name.trim().length >= 2 && draft.age > 0 && draft.height > 0 && draft.weight > 0) ||
     (step === 1) ||
     (step === 2 && draft.goalWeight > 0 && draft.timelineWeeks > 0);
 
-  const finish = () => {
-    const profile: Profile = {
+  const finish = async () => {
+    if (!user) return;
+
+    setSaving(true);
+
+    const profileData = {
       name: draft.name.trim(),
       age: draft.age,
       gender: draft.gender,
       height: draft.height,
       weight: draft.weight,
       goal: draft.goal,
-      goalWeight: draft.goalWeight,
-      timelineWeeks: draft.timelineWeeks,
-      workMode: draft.workMode,
+      goal_weight: draft.goalWeight,
+      timeline_weeks: draft.timelineWeeks,
+      work_mode: draft.workMode,
       activity: draft.activity,
       food: draft.food,
       equipment: draft.equipment,
       budget: draft.budget,
-      createdAt: new Date().toISOString(),
     };
-    saveProfile(profile);
+
+    if (profile) {
+      await updateProfile(profileData);
+    } else {
+      await createProfile(profileData);
+    }
+
+    setSaving(false);
     navigate({ to: "/dashboard" });
   };
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <p className="text-muted-foreground">Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -124,11 +178,11 @@ function Onboarding() {
           ) : (
             <button
               type="button"
-              disabled={!canContinue}
+              disabled={!canContinue || saving}
               onClick={finish}
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-brand text-brand-foreground font-semibold shadow-glow hover:opacity-95 disabled:opacity-40 transition"
             >
-              Build my plan <ArrowRight className="h-4 w-4" />
+              {saving ? "Saving..." : "Build my plan"} <ArrowRight className="h-4 w-4" />
             </button>
           )}
         </div>
@@ -209,7 +263,7 @@ function LifestyleStep({ draft, set }: StepProps) {
       <div><Label>Equipment at home</Label>
         <Chips options={["No equipment", "Dumbbells"] as const} value={draft.equipment} onChange={(v) => set("equipment", v)} />
       </div>
-      <label className="block"><Label>Daily food budget (₹)</Label>
+      <label className="block"><Label>Daily food budget (INR)</Label>
         <Input type="number" value={draft.budget} onChange={(e) => set("budget", Number(e.target.value) || 0)} />
       </label>
     </div>

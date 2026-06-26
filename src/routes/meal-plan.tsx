@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/AppShell";
 import { useState, useMemo } from "react";
 import { Flame, Beef } from "lucide-react";
-import { useProfile } from "@/lib/profile";
+import { useAuth } from "@/lib/auth";
 import { generateMealPlan } from "@/lib/generators";
 
 export const Route = createFileRoute("/meal-plan")({
@@ -11,10 +11,28 @@ export const Route = createFileRoute("/meal-plan")({
 });
 
 function MealPlan() {
-  const { profile } = useProfile();
+  const { profile } = useAuth();
   const [active, setActive] = useState(0);
 
-  const mealPlan = useMemo(() => (profile ? generateMealPlan(profile) : []), [profile]);
+  const mealPlan = useMemo(() => {
+    if (!profile) return [];
+    return generateMealPlan({
+      name: profile.name,
+      age: profile.age,
+      gender: profile.gender,
+      height: profile.height,
+      weight: profile.weight,
+      goal: profile.goal,
+      goalWeight: profile.goal_weight,
+      timelineWeeks: profile.timeline_weeks,
+      workMode: profile.work_mode,
+      activity: profile.activity,
+      food: profile.food,
+      equipment: profile.equipment,
+      budget: profile.budget,
+      createdAt: profile.created_at,
+    });
+  }, [profile]);
 
   if (!profile || mealPlan.length === 0) {
     return <AppShell title="Meal Plan">{null}</AppShell>;

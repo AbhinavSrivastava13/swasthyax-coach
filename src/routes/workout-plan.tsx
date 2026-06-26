@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo } from "react";
 import { AppShell } from "@/components/AppShell";
 import { Dumbbell, Home } from "lucide-react";
-import { useProfile } from "@/lib/profile";
+import { useAuth } from "@/lib/auth";
 import { generateWorkoutPlan } from "@/lib/generators";
 
 export const Route = createFileRoute("/workout-plan")({
@@ -11,8 +11,27 @@ export const Route = createFileRoute("/workout-plan")({
 });
 
 function WorkoutPlan() {
-  const { profile } = useProfile();
-  const plan = useMemo(() => (profile ? generateWorkoutPlan(profile) : []), [profile]);
+  const { profile } = useAuth();
+
+  const plan = useMemo(() => {
+    if (!profile) return [];
+    return generateWorkoutPlan({
+      name: profile.name,
+      age: profile.age,
+      gender: profile.gender,
+      height: profile.height,
+      weight: profile.weight,
+      goal: profile.goal,
+      goalWeight: profile.goal_weight,
+      timelineWeeks: profile.timeline_weeks,
+      workMode: profile.work_mode,
+      activity: profile.activity,
+      food: profile.food,
+      equipment: profile.equipment,
+      budget: profile.budget,
+      createdAt: profile.created_at,
+    });
+  }, [profile]);
 
   if (!profile) return <AppShell title="Workout Plan">{null}</AppShell>;
 
