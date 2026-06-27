@@ -15,5 +15,7 @@ export default defineConfig({
       enabled: true,
       routes: ["/", "/login", "/signup", "/onboarding", "/dashboard", "/meal-plan", "/workout-plan", "/check-in", "/protein-calculator"],
     },
+    // Force Nitro to run for Bolt hosting (Cloudflare)
+    nitro: true,
   },
 });
