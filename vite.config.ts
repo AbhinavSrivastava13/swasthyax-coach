@@ -8,10 +8,6 @@ import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
   tanstackStart: {
-    prerender: {
-      enabled: true,
-      routes: ["/", "/login", "/signup", "/onboarding", "/dashboard", "/meal-plan", "/workout-plan", "/check-in", "/protein-calculator"],
-    },
     // Force Nitro to run for Bolt hosting (Cloudflare)
     nitro: true,
   },
