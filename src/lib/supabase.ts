@@ -29,7 +29,7 @@ export interface ProfileRow {
   height: number;
   weight: number;
   goal: Goal;
-  goal_weight: number | null;
+  goal_weight: number;
   activity: Activity;
   food: Food;
   equipment: Equipment;
