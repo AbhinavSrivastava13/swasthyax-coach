@@ -106,9 +106,9 @@ export interface Database {
       check_ins: { Row: CheckInRow; Insert: CheckInInsert; Update: CheckInUpdate; Relationships: [] };
       ai_insights: { Row: AiInsightRow; Insert: Partial<AiInsightRow> & { user_id: string; content: string }; Update: Partial<AiInsightRow>; Relationships: [] };
     };
-    Views: Record<string, never>;
-    Functions: Record<string, never>;
-    Enums: Record<string, never>;
-    CompositeTypes: Record<string, never>;
+    Views: { [_ in never]: never };
+    Functions: { [_ in never]: never };
+    Enums: { [_ in never]: never };
+    CompositeTypes: { [_ in never]: never };
   };
 }
