@@ -1,5 +1,8 @@
 // Re-export the Lovable-managed Supabase client so existing app code keeps working.
-export { supabase } from "@/integrations/supabase/client";
+import { supabase as _rawSupabase } from "@/integrations/supabase/client";
+import type { SupabaseClient } from "@supabase/supabase-js";
+// Cast to our app-local Database type so table typings match what the app actually uses.
+export const supabase = _rawSupabase as unknown as SupabaseClient<Database>;
 
 export type Json =
   | string
