@@ -102,9 +102,13 @@ export interface AiInsightRow {
 export interface Database {
   public: {
     Tables: {
-      profiles: { Row: ProfileRow; Insert: ProfileInsert; Update: ProfileUpdate };
-      check_ins: { Row: CheckInRow; Insert: CheckInInsert; Update: CheckInUpdate };
-      ai_insights: { Row: AiInsightRow; Insert: Partial<AiInsightRow> & { user_id: string; content: string }; Update: Partial<AiInsightRow> };
+      profiles: { Row: ProfileRow; Insert: ProfileInsert; Update: ProfileUpdate; Relationships: [] };
+      check_ins: { Row: CheckInRow; Insert: CheckInInsert; Update: CheckInUpdate; Relationships: [] };
+      ai_insights: { Row: AiInsightRow; Insert: Partial<AiInsightRow> & { user_id: string; content: string }; Update: Partial<AiInsightRow>; Relationships: [] };
     };
+    Views: Record<string, never>;
+    Functions: Record<string, never>;
+    Enums: Record<string, never>;
+    CompositeTypes: Record<string, never>;
   };
 }
