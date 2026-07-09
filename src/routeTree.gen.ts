@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WorkoutPlanRouteImport } from './routes/workout-plan'
 import { Route as SignupRouteImport } from './routes/signup'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ProteinCalculatorRouteImport } from './routes/protein-calculator'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as MealPlanRouteImport } from './routes/meal-plan'
@@ -28,6 +29,11 @@ const WorkoutPlanRoute = WorkoutPlanRouteImport.update({
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProteinCalculatorRoute = ProteinCalculatorRouteImport.update({
@@ -80,6 +86,7 @@ export interface FileRoutesByFullPath {
   '/meal-plan': typeof MealPlanRoute
   '/onboarding': typeof OnboardingRoute
   '/protein-calculator': typeof ProteinCalculatorRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/workout-plan': typeof WorkoutPlanRoute
 }
@@ -92,6 +99,7 @@ export interface FileRoutesByTo {
   '/meal-plan': typeof MealPlanRoute
   '/onboarding': typeof OnboardingRoute
   '/protein-calculator': typeof ProteinCalculatorRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/workout-plan': typeof WorkoutPlanRoute
 }
@@ -105,6 +113,7 @@ export interface FileRoutesById {
   '/meal-plan': typeof MealPlanRoute
   '/onboarding': typeof OnboardingRoute
   '/protein-calculator': typeof ProteinCalculatorRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/workout-plan': typeof WorkoutPlanRoute
 }
@@ -119,6 +128,7 @@ export interface FileRouteTypes {
     | '/meal-plan'
     | '/onboarding'
     | '/protein-calculator'
+    | '/reset-password'
     | '/signup'
     | '/workout-plan'
   fileRoutesByTo: FileRoutesByTo
@@ -131,6 +141,7 @@ export interface FileRouteTypes {
     | '/meal-plan'
     | '/onboarding'
     | '/protein-calculator'
+    | '/reset-password'
     | '/signup'
     | '/workout-plan'
   id:
@@ -143,6 +154,7 @@ export interface FileRouteTypes {
     | '/meal-plan'
     | '/onboarding'
     | '/protein-calculator'
+    | '/reset-password'
     | '/signup'
     | '/workout-plan'
   fileRoutesById: FileRoutesById
@@ -156,6 +168,7 @@ export interface RootRouteChildren {
   MealPlanRoute: typeof MealPlanRoute
   OnboardingRoute: typeof OnboardingRoute
   ProteinCalculatorRoute: typeof ProteinCalculatorRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   SignupRoute: typeof SignupRoute
   WorkoutPlanRoute: typeof WorkoutPlanRoute
 }
@@ -174,6 +187,13 @@ declare module '@tanstack/react-router' {
       path: '/signup'
       fullPath: '/signup'
       preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/protein-calculator': {
@@ -244,6 +264,7 @@ const rootRouteChildren: RootRouteChildren = {
   MealPlanRoute: MealPlanRoute,
   OnboardingRoute: OnboardingRoute,
   ProteinCalculatorRoute: ProteinCalculatorRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   SignupRoute: SignupRoute,
   WorkoutPlanRoute: WorkoutPlanRoute,
 }
