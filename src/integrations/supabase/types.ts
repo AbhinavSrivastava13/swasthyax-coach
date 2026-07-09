@@ -14,7 +14,228 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      ai_conversations: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          role: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      ai_insights: {
+        Row: {
+          content: string
+          created_at: string
+          date: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          date?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          date?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      check_ins: {
+        Row: {
+          calories: number | null
+          created_at: string
+          date: string
+          id: string
+          notes: string | null
+          protein: number | null
+          updated_at: string
+          user_id: string
+          water: number | null
+          weight: number | null
+          workout_done: boolean
+        }
+        Insert: {
+          calories?: number | null
+          created_at?: string
+          date?: string
+          id?: string
+          notes?: string | null
+          protein?: number | null
+          updated_at?: string
+          user_id: string
+          water?: number | null
+          weight?: number | null
+          workout_done?: boolean
+        }
+        Update: {
+          calories?: number | null
+          created_at?: string
+          date?: string
+          id?: string
+          notes?: string | null
+          protein?: number | null
+          updated_at?: string
+          user_id?: string
+          water?: number | null
+          weight?: number | null
+          workout_done?: boolean
+        }
+        Relationships: []
+      }
+      meal_plans: {
+        Row: {
+          created_at: string
+          daily_calories: number | null
+          daily_protein: number | null
+          id: string
+          is_active: boolean
+          plan: Json
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          daily_calories?: number | null
+          daily_protein?: number | null
+          id?: string
+          is_active?: boolean
+          plan: Json
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          daily_calories?: number | null
+          daily_protein?: number | null
+          id?: string
+          is_active?: boolean
+          plan?: Json
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          activity: Database["public"]["Enums"]["activity_level"]
+          age: number
+          bmr: number
+          budget: number
+          created_at: string
+          daily_calories: number
+          daily_protein: number
+          daily_water_ml: number
+          email: string | null
+          equipment: Database["public"]["Enums"]["equipment_type"]
+          food: Database["public"]["Enums"]["food_pref"]
+          gender: Database["public"]["Enums"]["gender_type"]
+          goal: Database["public"]["Enums"]["fitness_goal"]
+          goal_weight: number | null
+          height: number
+          id: string
+          name: string
+          tdee: number
+          timeline_weeks: number
+          updated_at: string
+          user_id: string
+          weight: number
+          work_mode: Database["public"]["Enums"]["work_mode"]
+        }
+        Insert: {
+          activity?: Database["public"]["Enums"]["activity_level"]
+          age: number
+          bmr?: number
+          budget?: number
+          created_at?: string
+          daily_calories?: number
+          daily_protein?: number
+          daily_water_ml?: number
+          email?: string | null
+          equipment?: Database["public"]["Enums"]["equipment_type"]
+          food?: Database["public"]["Enums"]["food_pref"]
+          gender: Database["public"]["Enums"]["gender_type"]
+          goal?: Database["public"]["Enums"]["fitness_goal"]
+          goal_weight?: number | null
+          height: number
+          id?: string
+          name: string
+          tdee?: number
+          timeline_weeks?: number
+          updated_at?: string
+          user_id: string
+          weight: number
+          work_mode?: Database["public"]["Enums"]["work_mode"]
+        }
+        Update: {
+          activity?: Database["public"]["Enums"]["activity_level"]
+          age?: number
+          bmr?: number
+          budget?: number
+          created_at?: string
+          daily_calories?: number
+          daily_protein?: number
+          daily_water_ml?: number
+          email?: string | null
+          equipment?: Database["public"]["Enums"]["equipment_type"]
+          food?: Database["public"]["Enums"]["food_pref"]
+          gender?: Database["public"]["Enums"]["gender_type"]
+          goal?: Database["public"]["Enums"]["fitness_goal"]
+          goal_weight?: number | null
+          height?: number
+          id?: string
+          name?: string
+          tdee?: number
+          timeline_weeks?: number
+          updated_at?: string
+          user_id?: string
+          weight?: number
+          work_mode?: Database["public"]["Enums"]["work_mode"]
+        }
+        Relationships: []
+      }
+      workout_plans: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          plan: Json
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          plan: Json
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          plan?: Json
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +244,12 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      activity_level: "Sedentary" | "Lightly Active" | "Active" | "Very Active"
+      equipment_type: "No equipment" | "Dumbbells" | "Full Gym"
+      fitness_goal: "Fat Loss" | "Muscle Gain" | "Maintenance"
+      food_pref: "Vegetarian" | "Eggetarian" | "Non-Vegetarian" | "Vegan"
+      gender_type: "Male" | "Female" | "Other"
+      work_mode: "Remote" | "Hybrid" | "Office"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +376,13 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      activity_level: ["Sedentary", "Lightly Active", "Active", "Very Active"],
+      equipment_type: ["No equipment", "Dumbbells", "Full Gym"],
+      fitness_goal: ["Fat Loss", "Muscle Gain", "Maintenance"],
+      food_pref: ["Vegetarian", "Eggetarian", "Non-Vegetarian", "Vegan"],
+      gender_type: ["Male", "Female", "Other"],
+      work_mode: ["Remote", "Hybrid", "Office"],
+    },
   },
 } as const
