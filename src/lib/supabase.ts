@@ -100,6 +100,7 @@ export interface AiInsightRow {
 }
 
 export interface Database {
+  __InternalSupabase: { PostgrestVersion: "14.5" };
   public: {
     Tables: {
       profiles: { Row: ProfileRow; Insert: ProfileInsert; Update: ProfileUpdate; Relationships: [] };
