@@ -1,8 +1,10 @@
 // Re-export the Lovable-managed Supabase client so existing app code keeps working.
 import { supabase as _rawSupabase } from "@/integrations/supabase/client";
 import type { SupabaseClient } from "@supabase/supabase-js";
-// Cast to our app-local Database type so table typings match what the app actually uses.
-export const supabase = _rawSupabase as unknown as SupabaseClient<Database>;
+// Loosen the client typing so table-specific typings from this file's
+// ProfileRow / CheckInRow / etc. can be applied at the call site.
+// The generated types in integrations/supabase/types.ts don't include our tables.
+export const supabase = _rawSupabase as unknown as SupabaseClient<any, "public", any>;
 
 export type Json =
   | string
