@@ -148,7 +148,7 @@ function Dashboard() {
   if (!profile || !data) return <AppShell title="Loading">{null}</AppShell>;
 
   const firstName = profile.name.split(" ")[0];
-  const waterTarget = 3.5;
+  const waterTarget = (profile.daily_water_ml ?? 3500) / 1000;
   const goingRightWay = profile.goal === "Fat Loss" ? data.delta <= 0 : data.delta >= 0;
 
   const max = Math.max(...data.weightSeries.map((p) => p.weight));
