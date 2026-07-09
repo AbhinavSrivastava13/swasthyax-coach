@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { AuthShell, Field } from "@/components/AuthShell";
 import { useAuth } from "@/lib/auth";
+import { GoogleButton } from "@/components/GoogleButton";
 
 export const Route = createFileRoute("/login")({
   head: () => ({ meta: [{ title: "Log in — SwasthyaX" }, { name: "description", content: "Log in to your SwasthyaX account." }] }),
@@ -20,18 +21,14 @@ function Login() {
     e.preventDefault();
     setError(null);
     setLoading(true);
-
     const { error: signInError } = await signIn(email, password);
-
     setLoading(false);
-
     if (signInError) {
       setError(signInError.message === "Invalid login credentials"
         ? "Invalid email or password. Please try again."
         : signInError.message);
       return;
     }
-
     navigate({ to: "/dashboard" });
   };
 
@@ -41,6 +38,12 @@ function Login() {
       subtitle="Log in to continue your fitness journey."
       footer={<>New here? <Link to="/signup" className="text-brand font-medium">Create an account</Link></>}
     >
+      <GoogleButton label="Continue with Google" />
+      <div className="flex items-center gap-3 my-2">
+        <div className="h-px flex-1 bg-border" />
+        <span className="text-xs uppercase tracking-wider text-muted-foreground">or</span>
+        <div className="h-px flex-1 bg-border" />
+      </div>
       <form onSubmit={handleSubmit} className="space-y-4">
         <Field
           label="Email"
@@ -58,9 +61,12 @@ function Login() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        {error && (
-          <p className="text-sm text-destructive">{error}</p>
-        )}
+        <div className="text-right">
+          <Link to="/forgot-password" className="text-sm text-brand font-medium hover:underline">
+            Forgot password?
+          </Link>
+        </div>
+        {error && <p className="text-sm text-destructive">{error}</p>}
         <button
           type="submit"
           disabled={loading}

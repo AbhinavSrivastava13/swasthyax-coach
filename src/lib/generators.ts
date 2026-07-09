@@ -33,6 +33,24 @@ export function bmi(p: Pick<Profile, "weight" | "height">) {
   return +(p.weight / (m * m)).toFixed(1);
 }
 
+/** Recommended daily water intake in ml. 35 ml/kg body weight, +500ml if Active. */
+export function waterTargetMl(p: Pick<Profile, "weight" | "activity">) {
+  const base = Math.round(p.weight * 35);
+  return p.activity === "Active" ? base + 500 : base;
+}
+
+/**
+ * Estimate weeks to reach goal weight, given a sustainable pace:
+ *  - Fat Loss: ~0.5 kg / week
+ *  - Muscle Gain: ~0.25 kg / week (lean gain)
+ */
+export function estimateTimelineWeeks(p: Pick<Profile, "weight" | "goalWeight" | "goal">) {
+  const diff = Math.abs(p.weight - p.goalWeight);
+  if (diff < 0.5) return 4;
+  const pace = p.goal === "Fat Loss" ? 0.5 : 0.25;
+  return Math.max(4, Math.min(52, Math.ceil(diff / pace)));
+}
+
 // ───────────────── Meal plan ─────────────────
 
 export type Meal = { name: string; items: string; kcal: number; protein: number };

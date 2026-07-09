@@ -1,19 +1,19 @@
 import { createContext, useContext, useEffect, useState, useCallback, type ReactNode } from "react";
-import { User, Session, AuthError } from "@supabase/supabase-js";
+import type { User, Session, AuthError } from "@supabase/supabase-js";
 import { supabase } from "./supabase";
-import type { Database } from "./supabase";
-
-type Profile = Database["public"]["Tables"]["profiles"]["Row"];
-type ProfileInsert = Database["public"]["Tables"]["profiles"]["Insert"];
+import type { ProfileRow } from "./supabase";
+import { lovable } from "@/integrations/lovable";
 
 interface AuthContextType {
   user: User | null;
   session: Session | null;
-  profile: Profile | null;
+  profile: ProfileRow | null;
   loading: boolean;
   signUp: (email: string, password: string, name: string) => Promise<{ error: AuthError | null }>;
   signIn: (email: string, password: string) => Promise<{ error: AuthError | null }>;
+  signInWithGoogle: () => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
+  resetPasswordForEmail: (email: string) => Promise<{ error: AuthError | null }>;
   refreshProfile: () => Promise<void>;
 }
 
@@ -22,7 +22,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
-  const [profile, setProfile] = useState<Profile | null>(null);
+  const [profile, setProfile] = useState<ProfileRow | null>(null);
   const [loading, setLoading] = useState(true);
 
   const fetchProfile = useCallback(async (userId: string) => {
@@ -34,20 +34,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     if (error) {
       console.error("Error fetching profile:", error);
+      setProfile(null);
+      return;
     }
-    setProfile(data);
+    setProfile((data as ProfileRow | null) ?? null);
   }, []);
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
 
       if (session?.user) {
-        (async () => {
-          await fetchProfile(session.user.id);
-          setLoading(false);
-        })();
+        // Defer the async DB call so the auth callback returns synchronously.
+        setTimeout(() => {
+          fetchProfile(session.user.id).finally(() => setLoading(false));
+        }, 0);
       } else {
         setProfile(null);
         setLoading(false);
@@ -69,51 +71,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [fetchProfile]);
 
   const signUp = async (email: string, password: string, name: string) => {
-    const { data, error } = await supabase.auth.signUp({
+    // No auto-profile creation — onboarding builds the profile with all calculated fields.
+    const { error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: { name },
-        emailRedirectTo: undefined,
+        emailRedirectTo: `${window.location.origin}/dashboard`,
       },
     });
-
-    if (error) return { error };
-    if (data.user) {
-      const profileData: ProfileInsert = {
-        user_id: data.user.id,
-        name,
-        age: 28,
-        gender: "Male",
-        height: 175,
-        weight: 75,
-        goal: "Fat Loss",
-        goal_weight: 70,
-        timeline_weeks: 12,
-        work_mode: "Hybrid",
-        activity: "Lightly Active",
-        food: "Vegetarian",
-        equipment: "No equipment",
-        budget: 250,
-      };
-
-      const { error: profileError } = await supabase
-        .from("profiles")
-        .insert(profileData);
-
-      if (profileError) {
-        console.error("Error creating profile:", profileError);
-      }
-    }
-    return { error: null };
+    return { error };
   };
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
     return { error };
+  };
+
+  const signInWithGoogle = async () => {
+    try {
+      const result = await lovable.auth.signInWithOAuth("google", {
+        redirect_uri: window.location.origin,
+      });
+      if (result.error) return { error: result.error instanceof Error ? result.error : new Error(String(result.error)) };
+      return { error: null };
+    } catch (e) {
+      return { error: e instanceof Error ? e : new Error(String(e)) };
+    }
   };
 
   const signOut = async () => {
@@ -121,6 +105,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
     setSession(null);
     setProfile(null);
+  };
+
+  const resetPasswordForEmail = async (email: string) => {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    return { error };
   };
 
   const refreshProfile = async () => {
@@ -138,7 +129,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         loading,
         signUp,
         signIn,
+        signInWithGoogle,
         signOut,
+        resetPasswordForEmail,
         refreshProfile,
       }}
     >

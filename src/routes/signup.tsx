@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { AuthShell, Field } from "@/components/AuthShell";
 import { useAuth } from "@/lib/auth";
+import { GoogleButton } from "@/components/GoogleButton";
 
 export const Route = createFileRoute("/signup")({
   head: () => ({ meta: [{ title: "Sign up — SwasthyaX" }, { name: "description", content: "Create your free SwasthyaX account." }] }),
@@ -21,11 +22,8 @@ function Signup() {
     e.preventDefault();
     setError(null);
     setLoading(true);
-
     const { error: signUpError } = await signUp(email, password, name);
-
     setLoading(false);
-
     if (signUpError) {
       setError(
         signUpError.message.includes("already registered")
@@ -34,7 +32,6 @@ function Signup() {
       );
       return;
     }
-
     navigate({ to: "/onboarding" });
   };
 
@@ -44,6 +41,12 @@ function Signup() {
       subtitle="Start your personalized Indian fitness plan in under 2 minutes."
       footer={<>Already have an account? <Link to="/login" className="text-brand font-medium">Log in</Link></>}
     >
+      <GoogleButton label="Sign up with Google" />
+      <div className="flex items-center gap-3 my-2">
+        <div className="h-px flex-1 bg-border" />
+        <span className="text-xs uppercase tracking-wider text-muted-foreground">or</span>
+        <div className="h-px flex-1 bg-border" />
+      </div>
       <form onSubmit={handleSubmit} className="space-y-4">
         <Field
           label="Full name"
@@ -69,9 +72,7 @@ function Signup() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        {error && (
-          <p className="text-sm text-destructive">{error}</p>
-        )}
+        {error && <p className="text-sm text-destructive">{error}</p>}
         <button
           type="submit"
           disabled={loading}
