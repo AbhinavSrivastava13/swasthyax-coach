@@ -42,13 +42,27 @@ export interface ProfileRow {
   updated_at: string;
 }
 
-export type ProfileInsert = Partial<ProfileRow> & {
+export type ProfileInsert = {
   user_id: string;
   name: string;
   age: number;
   gender: Gender;
   height: number;
   weight: number;
+  goal?: Goal;
+  goal_weight?: number | null;
+  activity?: Activity;
+  food?: Food;
+  equipment?: Equipment;
+  work_mode?: WorkMode;
+  budget?: number;
+  email?: string | null;
+  bmr?: number;
+  tdee?: number;
+  daily_calories?: number;
+  daily_protein?: number;
+  daily_water_ml?: number;
+  timeline_weeks?: number;
 };
 
 export type ProfileUpdate = Partial<ProfileRow>;
