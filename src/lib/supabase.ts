@@ -10,11 +10,11 @@ export type Json =
   | Json[];
 
 type Gender = "Male" | "Female" | "Other";
-type Activity = "Sedentary" | "Lightly Active" | "Active" | "Very Active";
-type Food = "Vegetarian" | "Eggetarian" | "Non-Vegetarian" | "Vegan";
-type Equipment = "No equipment" | "Dumbbells" | "Full Gym";
+type Activity = "Sedentary" | "Lightly Active" | "Active";
+type Food = "Vegetarian" | "Eggetarian" | "Non-Vegetarian";
+type Equipment = "No equipment" | "Dumbbells";
 type WorkMode = "Remote" | "Hybrid" | "Office";
-type Goal = "Fat Loss" | "Muscle Gain" | "Maintenance";
+type Goal = "Fat Loss" | "Muscle Gain";
 
 export interface ProfileRow {
   id: string;
