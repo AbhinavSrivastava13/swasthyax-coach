@@ -6,16 +6,10 @@
 // You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
-const supabaseUrl = process.env.VITE_SUPABASE_URL ?? process.env.SUPABASE_URL;
+// Temporary debugging override. Restore deployment environment bindings before production.
+const supabaseUrl = "https://pvkrqgxhqvwfpwszswvq.supabase.co";
 const supabasePublishableKey =
-  process.env.VITE_SUPABASE_PUBLISHABLE_KEY ??
-  process.env.VITE_SUPABASE_ANON_KEY ??
-  process.env.SUPABASE_PUBLISHABLE_KEY;
-
-console.info("[SwasthyaX build] Public backend bindings", {
-  hasUrl: Boolean(supabaseUrl),
-  hasPublishableKey: Boolean(supabasePublishableKey),
-});
+  "sb_publishable__s_UJYnTdhP5KaZtXIgLPg_qg1d0VYK";
 
 export default defineConfig({
   vite: {

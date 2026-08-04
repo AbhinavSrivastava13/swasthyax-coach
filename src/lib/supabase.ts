@@ -1,10 +1,20 @@
-// Re-export the Lovable-managed Supabase client so existing app code keeps working.
-import { supabase as _rawSupabase } from "@/integrations/supabase/client";
+import { createClient } from "@supabase/supabase-js";
 import type { SupabaseClient } from "@supabase/supabase-js";
 // Loosen the client typing so table-specific typings from this file's
 // ProfileRow / CheckInRow / etc. can be applied at the call site.
 // The generated types in integrations/supabase/types.ts don't include our tables.
-export const supabase = _rawSupabase as unknown as SupabaseClient<any, "public", any>;
+const SUPABASE_URL = "https://pvkrqgxhqvwfpwszswvq.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY =
+  "sb_publishable__s_UJYnTdhP5KaZtXIgLPg_qg1d0VYK";
+
+export const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+  auth: {
+    storage: typeof window !== "undefined" ? localStorage : undefined,
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true,
+  },
+}) as unknown as SupabaseClient<any, "public", any>;
 
 export type Json =
   | string
