@@ -6,7 +6,29 @@
 // You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
+const supabaseUrl = process.env.VITE_SUPABASE_URL ?? process.env.SUPABASE_URL;
+const supabasePublishableKey =
+  process.env.VITE_SUPABASE_PUBLISHABLE_KEY ??
+  process.env.VITE_SUPABASE_ANON_KEY ??
+  process.env.SUPABASE_PUBLISHABLE_KEY;
+
+console.info("[SwasthyaX build] Public backend bindings", {
+  hasUrl: Boolean(supabaseUrl),
+  hasPublishableKey: Boolean(supabasePublishableKey),
+});
+
 export default defineConfig({
+  vite: {
+    define: {
+      "import.meta.env.VITE_SUPABASE_URL": JSON.stringify(supabaseUrl),
+      "import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY": JSON.stringify(
+        supabasePublishableKey,
+      ),
+      "import.meta.env.VITE_SUPABASE_ANON_KEY": JSON.stringify(
+        supabasePublishableKey,
+      ),
+    },
+  },
   tanstackStart: {
     // Force Nitro to run for Bolt hosting (Cloudflare)
     nitro: true,
