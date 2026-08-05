@@ -9,7 +9,7 @@ interface AuthContextType {
   session: Session | null;
   profile: ProfileRow | null;
   loading: boolean;
-  signUp: (email: string, password: string, name: string) => Promise<{ error: AuthError | null }>;
+  signUp: (email: string, password: string, name: string) => Promise<{ error: AuthError | null; needsConfirmation?: boolean }>;
   signIn: (email: string, password: string) => Promise<{ error: AuthError | null }>;
   signInWithGoogle: () => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
@@ -72,7 +72,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signUp = async (email: string, password: string, name: string) => {
     // No auto-profile creation — onboarding builds the profile with all calculated fields.
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -80,12 +80,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         emailRedirectTo: `${window.location.origin}/dashboard`,
       },
     });
-    return { error };
+    return { error, needsConfirmation: !error && !data.session };
   };
 
   const signIn = async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
-    return { error };
+    return { error, needsConfirmation: !error && !data.session };
   };
 
   const signInWithGoogle = async () => {

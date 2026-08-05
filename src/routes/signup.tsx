@@ -17,12 +17,13 @@ function Signup() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [sent, setSent] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
-    const { error: signUpError } = await signUp(email, password, name);
+    const { error: signUpError, needsConfirmation } = await signUp(email, password, name);
     setLoading(false);
     if (signUpError) {
       setError(
@@ -30,6 +31,10 @@ function Signup() {
           ? "An account with this email already exists. Please log in instead."
           : signUpError.message
       );
+      return;
+    }
+    if (needsConfirmation) {
+      setSent(true);
       return;
     }
     navigate({ to: "/onboarding" });
@@ -41,6 +46,11 @@ function Signup() {
       subtitle="Start your personalized Indian fitness plan in under 2 minutes."
       footer={<>Already have an account? <Link to="/login" className="text-brand font-medium">Log in</Link></>}
     >
+      {sent && (
+        <p className="mb-4 rounded-lg border border-border bg-card p-4 text-sm">
+          Check your inbox — we sent a confirmation link to <strong>{email}</strong>. Confirm it, then log in to finish onboarding.
+        </p>
+      )}
       <GoogleButton label="Sign up with Google" />
       <div className="flex items-center gap-3 my-2">
         <div className="h-px flex-1 bg-border" />
