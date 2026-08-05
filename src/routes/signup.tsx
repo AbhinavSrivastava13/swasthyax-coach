@@ -25,6 +25,7 @@ function Signup() {
     setLoading(true);
     const { error: signUpError, needsConfirmation } = await signUp(email, password, name);
     setLoading(false);
+    console.log("[signup]", { err: signUpError?.message, needsConfirmation });
     if (signUpError) {
       setError(
         signUpError.message.includes("already registered")
