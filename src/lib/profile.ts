@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 
-export type Goal = "Fat Loss" | "Muscle Gain";
+export type Goal = "Fat Loss" | "Muscle Gain" | "Maintenance";
 export type Gender = "Male" | "Female" | "Other";
-export type Activity = "Sedentary" | "Lightly Active" | "Active";
-export type Food = "Vegetarian" | "Eggetarian" | "Non-Vegetarian";
-export type Equipment = "No equipment" | "Dumbbells";
+export type Activity = "Sedentary" | "Lightly Active" | "Active" | "Very Active";
+export type Food = "Vegetarian" | "Eggetarian" | "Non-Vegetarian" | "Vegan";
+export type Equipment = "No equipment" | "Dumbbells" | "Full Gym";
 
 export type Profile = {
   name: string;
@@ -12,7 +12,7 @@ export type Profile = {
   gender: Gender;
   height: number; // cm
   weight: number; // kg
-  goalWeight: number;
+  goalWeight: number | null;
   goal: Goal;
   timelineWeeks: number;
   workMode: "Remote" | "Hybrid" | "Office";

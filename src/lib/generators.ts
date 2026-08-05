@@ -7,10 +7,19 @@ export function bmr(p: Pick<Profile, "weight" | "height" | "age" | "gender">) {
   return p.gender === "Female" ? base - 161 : base + 5;
 }
 
+type BaseFood = "Vegetarian" | "Eggetarian" | "Non-Vegetarian";
+type BaseEquipment = "No equipment" | "Dumbbells";
+type BaseGoal = "Fat Loss" | "Muscle Gain";
+
+const normFood = (f: Food): BaseFood => (f === "Vegan" ? "Vegetarian" : f);
+const normEquipment = (e: Equipment): BaseEquipment => (e === "Full Gym" ? "Dumbbells" : e);
+const normGoal = (g: Goal): BaseGoal => (g === "Maintenance" ? "Fat Loss" : g);
+
 const ACTIVITY_FACTOR = {
   Sedentary: 1.2,
   "Lightly Active": 1.375,
   Active: 1.55,
+  "Very Active": 1.725,
 } as const;
 
 export function tdee(p: Pick<Profile, "weight" | "height" | "age" | "gender" | "activity">) {
@@ -19,12 +28,13 @@ export function tdee(p: Pick<Profile, "weight" | "height" | "age" | "gender" | "
 
 export function calorieTarget(p: Profile) {
   const maintenance = tdee(p);
+  if (p.goal === "Maintenance") return maintenance;
   return p.goal === "Fat Loss" ? maintenance - 500 : maintenance + 350;
 }
 
 export function proteinTarget(p: Profile) {
   // g/kg: fat loss higher to preserve muscle; muscle gain to build
-  const factor = p.goal === "Fat Loss" ? 1.8 : 2.0;
+  const factor = p.goal === "Fat Loss" ? 1.8 : p.goal === "Maintenance" ? 1.6 : 2.0;
   return Math.round(p.weight * factor);
 }
 
@@ -36,7 +46,7 @@ export function bmi(p: Pick<Profile, "weight" | "height">) {
 /** Recommended daily water intake in ml. 35 ml/kg body weight, +500ml if Active. */
 export function waterTargetMl(p: Pick<Profile, "weight" | "activity">) {
   const base = Math.round(p.weight * 35);
-  return p.activity === "Active" ? base + 500 : base;
+  return p.activity === "Active" || p.activity === "Very Active" ? base + 500 : base;
 }
 
 /**
@@ -45,6 +55,7 @@ export function waterTargetMl(p: Pick<Profile, "weight" | "activity">) {
  *  - Muscle Gain: ~0.25 kg / week (lean gain)
  */
 export function estimateTimelineWeeks(p: Pick<Profile, "weight" | "goalWeight" | "goal">) {
+  if (p.goalWeight == null) return 12;
   const diff = Math.abs(p.weight - p.goalWeight);
   if (diff < 0.5) return 4;
   const pace = p.goal === "Fat Loss" ? 0.5 : 0.25;
@@ -60,7 +71,7 @@ const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
 
 type MealTemplate = { items: string; protein: number; baseKcal: number };
 
-const POOL: Record<Food, { breakfast: MealTemplate[]; lunch: MealTemplate[]; dinner: MealTemplate[]; snack: MealTemplate[] }> = {
+const POOL: Record<BaseFood, { breakfast: MealTemplate[]; lunch: MealTemplate[]; dinner: MealTemplate[]; snack: MealTemplate[] }> = {
   Vegetarian: {
     breakfast: [
       { items: "Moong dal chilla + mint chutney + curd", protein: 24, baseKcal: 420 },
@@ -195,7 +206,7 @@ export function generateMealPlan(p: Profile): DayMeals[] {
   const dK = Math.round(total * 0.30);
   const sK = total - bK - lK - dK;
 
-  const pool = POOL[p.food];
+  const pool = POOL[normFood(p.food)];
   return DAYS.map((day, i) => ({
     day,
     breakfast: scaleMeal(pool.breakfast[i % pool.breakfast.length], bK, "Breakfast"),
@@ -210,7 +221,7 @@ export function generateMealPlan(p: Profile): DayMeals[] {
 export type Exercise = { name: string; sets: string };
 export type Workout = { day: string; focus: string; exercises: Exercise[] };
 
-const WORKOUTS: Record<Goal, Record<Equipment, Workout[]>> = {
+const WORKOUTS: Record<BaseGoal, Record<BaseEquipment, Workout[]>> = {
   "Fat Loss": {
     "No equipment": [
       { day: "Monday", focus: "HIIT + Upper Body", exercises: [
@@ -370,12 +381,12 @@ const WORKOUTS: Record<Goal, Record<Equipment, Workout[]>> = {
 };
 
 export function generateWorkoutPlan(p: Profile): Workout[] {
-  return WORKOUTS[p.goal][p.equipment];
+  return WORKOUTS[normGoal(p.goal)][normEquipment(p.equipment)];
 }
 
 // ───────────────── Protein food suggestions ─────────────────
 
-export const PROTEIN_FOODS: Record<Food, { name: string; protein: number }[]> = {
+const PROTEIN_FOODS_BASE: Record<BaseFood, { name: string; protein: number }[]> = {
   Vegetarian: [
     { name: "Paneer (100g)", protein: 18 },
     { name: "Moong dal cooked (1 bowl)", protein: 14 },
@@ -405,5 +416,19 @@ export const PROTEIN_FOODS: Record<Food, { name: string; protein: number }[]> = 
     { name: "Greek yogurt (150g)", protein: 15 },
     { name: "Tuna (canned, 100g)", protein: 26 },
     { name: "Whey protein (1 scoop)", protein: 24 },
+  ],
+};
+
+export const PROTEIN_FOODS: Record<Food, { name: string; protein: number }[]> = {
+  ...PROTEIN_FOODS_BASE,
+  Vegan: [
+    { name: "Tofu (100g)", protein: 10 },
+    { name: "Soya chunks (50g dry)", protein: 26 },
+    { name: "Rajma cooked (1 bowl)", protein: 15 },
+    { name: "Chana cooked (1 bowl)", protein: 14 },
+    { name: "Peanuts (30g)", protein: 8 },
+    { name: "Quinoa cooked (1 bowl)", protein: 8 },
+    { name: "Pumpkin seeds (30g)", protein: 9 },
+    { name: "Plant protein (1 scoop)", protein: 24 },
   ],
 };
