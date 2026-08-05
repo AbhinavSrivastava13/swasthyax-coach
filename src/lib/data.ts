@@ -5,6 +5,7 @@ import type { Database } from "./supabase";
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 type ProfileUpdate = Database["public"]["Tables"]["profiles"]["Update"];
+type ProfileInsert = Database["public"]["Tables"]["profiles"]["Insert"];
 type CheckIn = Database["public"]["Tables"]["check_ins"]["Row"];
 type CheckInInsert = Database["public"]["Tables"]["check_ins"]["Insert"];
 type CheckInUpdate = Database["public"]["Tables"]["check_ins"]["Update"];
@@ -37,7 +38,7 @@ export function useProfileData() {
     return { error: null };
   }, [user, refreshProfile]);
 
-  const createProfile = useCallback(async (profileData: Omit<ProfileUpdate, "user_id">) => {
+  const createProfile = useCallback(async (profileData: Omit<ProfileInsert, "user_id">) => {
     if (!user) return { error: "Not authenticated" };
 
     setLoading(true);
@@ -193,24 +194,12 @@ export function useAiRecommendations() {
     setError(null);
 
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-recommendations`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-          },
-          body: JSON.stringify({ profile, checkIns }),
-        }
-      );
+      const { data, error: fnError } = await supabase.functions.invoke("ai-recommendations", {
+        body: { profile, checkIns },
+      });
 
-      if (!response.ok) {
-        throw new Error(`Request failed (${response.status})`);
-      }
-
-      const data = await response.json();
-      setRecommendation(data.recommendation);
+      if (fnError) throw fnError;
+      setRecommendation((data as { recommendation?: string } | null)?.recommendation ?? null);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to fetch recommendation");
     } finally {

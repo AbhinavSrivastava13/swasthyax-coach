@@ -6,25 +6,4 @@
 // You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
-// Temporary debugging override. Restore deployment environment bindings before production.
-const supabaseUrl = "https://pvkrqgxhqvwfpwszswvq.supabase.co";
-const supabasePublishableKey =
-  "sb_publishable__s_UJYnTdhP5KaZtXIgLPg_qg1d0VYK";
-
-export default defineConfig({
-  vite: {
-    define: {
-      "import.meta.env.VITE_SUPABASE_URL": JSON.stringify(supabaseUrl),
-      "import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY": JSON.stringify(
-        supabasePublishableKey,
-      ),
-      "import.meta.env.VITE_SUPABASE_ANON_KEY": JSON.stringify(
-        supabasePublishableKey,
-      ),
-    },
-  },
-  tanstackStart: {
-    // Force Nitro to run for Bolt hosting (Cloudflare)
-    nitro: true,
-  },
-});
+export default defineConfig({});

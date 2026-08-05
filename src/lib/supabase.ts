@@ -1,127 +1,21 @@
-import { createClient } from "@supabase/supabase-js";
-import type { SupabaseClient } from "@supabase/supabase-js";
-// Loosen the client typing so table-specific typings from this file's
-// ProfileRow / CheckInRow / etc. can be applied at the call site.
-// The generated types in integrations/supabase/types.ts don't include our tables.
-const SUPABASE_URL = "https://pvkrqgxhqvwfpwszswvq.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY =
-  "sb_publishable__s_UJYnTdhP5KaZtXIgLPg_qg1d0VYK";
+// Lovable Cloud managed backend client.
+// No hardcoded URLs/keys and no manual env lookups — the managed client
+// in src/integrations/supabase/client.ts owns all configuration.
+import { supabase } from "@/integrations/supabase/client";
+import type { Database, Json } from "@/integrations/supabase/types";
 
-export const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
-  auth: {
-    storage: typeof window !== "undefined" ? localStorage : undefined,
-    persistSession: true,
-    autoRefreshToken: true,
-    detectSessionInUrl: true,
-  },
-}) as unknown as SupabaseClient<any, "public", any>;
+export { supabase };
+export type { Database, Json };
 
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[];
+export type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];
+export type ProfileInsert = Database["public"]["Tables"]["profiles"]["Insert"];
+export type ProfileUpdate = Database["public"]["Tables"]["profiles"]["Update"];
 
-type Gender = "Male" | "Female" | "Other";
-type Activity = "Sedentary" | "Lightly Active" | "Active";
-type Food = "Vegetarian" | "Eggetarian" | "Non-Vegetarian";
-type Equipment = "No equipment" | "Dumbbells";
-type WorkMode = "Remote" | "Hybrid" | "Office";
-type Goal = "Fat Loss" | "Muscle Gain";
+export type CheckInRow = Database["public"]["Tables"]["check_ins"]["Row"];
+export type CheckInInsert = Database["public"]["Tables"]["check_ins"]["Insert"];
+export type CheckInUpdate = Database["public"]["Tables"]["check_ins"]["Update"];
 
-export interface ProfileRow {
-  id: string;
-  user_id: string;
-  email: string | null;
-  name: string;
-  age: number;
-  gender: Gender;
-  height: number;
-  weight: number;
-  goal: Goal;
-  goal_weight: number;
-  activity: Activity;
-  food: Food;
-  equipment: Equipment;
-  work_mode: WorkMode;
-  budget: number;
-  bmr: number;
-  tdee: number;
-  daily_calories: number;
-  daily_protein: number;
-  daily_water_ml: number;
-  timeline_weeks: number;
-  created_at: string;
-  updated_at: string;
-}
-
-export type ProfileInsert = {
-  user_id: string;
-  name: string;
-  age: number;
-  gender: Gender;
-  height: number;
-  weight: number;
-  goal?: Goal;
-  goal_weight?: number | null;
-  activity?: Activity;
-  food?: Food;
-  equipment?: Equipment;
-  work_mode?: WorkMode;
-  budget?: number;
-  email?: string | null;
-  bmr?: number;
-  tdee?: number;
-  daily_calories?: number;
-  daily_protein?: number;
-  daily_water_ml?: number;
-  timeline_weeks?: number;
-};
-
-export type ProfileUpdate = Partial<ProfileRow>;
-
-export interface CheckInRow {
-  id: string;
-  user_id: string;
-  date: string;
-  weight: number | null;
-  water: number | null;
-  protein: number | null;
-  calories: number | null;
-  workout_done: boolean;
-  notes: string | null;
-  created_at: string;
-  updated_at: string;
-}
-
-export type CheckInInsert = Partial<CheckInRow> & {
-  user_id: string;
-  date: string;
-};
-
-export type CheckInUpdate = Partial<CheckInRow>;
-
-export interface AiInsightRow {
-  id: string;
-  user_id: string;
-  date: string;
-  content: string;
-  created_at: string;
-}
-
-export interface Database {
-  __InternalSupabase: { PostgrestVersion: "14.5" };
-  public: {
-    Tables: {
-      profiles: { Row: ProfileRow; Insert: ProfileInsert; Update: ProfileUpdate; Relationships: [] };
-      check_ins: { Row: CheckInRow; Insert: CheckInInsert; Update: CheckInUpdate; Relationships: [] };
-      ai_insights: { Row: AiInsightRow; Insert: Partial<AiInsightRow> & { user_id: string; content: string }; Update: Partial<AiInsightRow>; Relationships: [] };
-    };
-    Views: { [_ in never]: never };
-    Functions: { [_ in never]: never };
-    Enums: { [_ in never]: never };
-    CompositeTypes: { [_ in never]: never };
-  };
-}
+export type AiInsightRow = Database["public"]["Tables"]["ai_insights"]["Row"];
+export type AiConversationRow = Database["public"]["Tables"]["ai_conversations"]["Row"];
+export type MealPlanRow = Database["public"]["Tables"]["meal_plans"]["Row"];
+export type WorkoutPlanRow = Database["public"]["Tables"]["workout_plans"]["Row"];
