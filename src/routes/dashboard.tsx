@@ -125,7 +125,7 @@ function Dashboard() {
     const goalProgressValue = profile.goal === "Fat Loss"
       ? Math.max(0, profile.weight - (currentWeight || profile.weight))
       : Math.max(0, (currentWeight || profile.weight) - profile.weight);
-    const goalProgressMax = Math.abs(profile.weight - profile.goal_weight) || 1;
+    const goalProgressMax = Math.abs(profile.weight - (profile.goal_weight ?? profile.weight)) || 1;
 
     return {
       cals, protein, meals, workouts, genProfile,
